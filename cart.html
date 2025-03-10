@@ -9,6 +9,52 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="css/main.css" />
     <script src="https://assets.adobedtm.com/8459819b208c/56507fb8b6cd/launch-d46920e3a074.min.js" async></script>
+    <script>
+    window.digitalData = window.digitalData || {};
+    
+    function updateDigitalDataFromCart() {
+        let cartData = JSON.parse(localStorage.getItem("cart") || "[]");
+    
+        let cartTotal = cartData.reduce((sum, item) => sum + (item.price.newPrice * item.quantity), 0);
+        let itemCount = cartData.reduce((sum, item) => sum + item.quantity, 0);
+    
+        let products = cartData.map(item => ({
+            productID: item.id,
+            productName: item.name,
+            oldPrice: item.price.oldPrice,
+            productPrice: item.price.newPrice,
+            discount: item.discount,
+            quantity: item.quantity,
+            productImage: item.img.singleImage
+        }));
+    
+        window.digitalData = {
+            page: {
+                pageName: "Cart Page",
+                siteSection: "Shopping Cart",
+                siteSubsection: "Checkout Process",
+                server: "USA Server"
+            },
+            cart: {
+                cartEvent: "Cart View",
+                cartTotal: cartTotal.toFixed(2),
+                currency: "USD",
+                itemCount: itemCount,
+                products: products
+            }
+        };
+    }
+    updateDigitalDataFromCart();
+    
+    document.addEventListener("click", function (event) {
+        if (event.target && event.target.classList.contains("delete-cart")) {
+            console.log("Delete button clicked! Updating digitalData...");
+             s.clearVars(); 
+            updateDigitalDataFromCart();
+        }
+    });
+</script>
+    
     <title>E-Commerce | Cart</title>
 </head>
 
